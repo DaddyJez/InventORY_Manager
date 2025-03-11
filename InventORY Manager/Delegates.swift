@@ -24,3 +24,8 @@ protocol StorageControllerDelegate: AnyObject {
 protocol LocationControllerDelegate: AnyObject {
     func didLocatedItem(rowData: LocationItem)
 }
+
+@MainActor
+protocol WorkerControllerDelegate: AnyObject {
+    func didPressedWorkerInfo(rowData: [String: String])
+}

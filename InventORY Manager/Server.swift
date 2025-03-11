@@ -148,7 +148,9 @@ class Server {
                 users.append([
                     "identifier": user.identifier,
                     "name": user.name,
-                    "level": String(user.level)
+                    "accessLevel": String(user.level),
+                    "login": user.login,
+                    "password": user.password
                 ])
             }
             return (users, true)

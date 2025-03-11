@@ -68,16 +68,16 @@ class MainViewController: UIViewController {
     @IBOutlet weak var workersTable: UITableView!
     
     @IBAction func filterWorkersByID(_ sender: Any) {
-        print("filter workers by id")
+        workersController!.applyFilter(criterion: "identifier")
     }
     @IBAction func filterWorkersByName(_ sender: Any) {
-        print("filter workers by name")
+        workersController!.applyFilter(criterion: "name")
     }
     @IBAction func filterWorkersByLevel(_ sender: Any) {
-        print("filter workers by level")
+        workersController!.applyFilter(criterion: "accessLevel")
     }
     @IBAction func resetWorkersFiltersTapped(_ sender: Any) {
-        print("reset workers filters")
+        workersController!.resetFilters()
     }
     
     override func viewDidLoad() {
@@ -109,7 +109,7 @@ class MainViewController: UIViewController {
     private func showWorkerWindow() {
         greetingLabel.text = "Personal"
         if self.workersController == nil {
-            self.workersController = WorkersController(resetFiltersButton: resetWorkerFiltersButton, tableView: workersTable, userData: self.userData)
+            self.workersController = WorkersController(resetFiltersButton: resetWorkerFiltersButton, tableView: workersTable, userData: self.userData, delegate: self)
         }
     }
     
@@ -155,6 +155,12 @@ extension MainViewController: AccountControllerDelegate {
     }
     func didChangeName(){
         self.userData = userDataManager.loadUserData()
+        if self.storageController != nil {
+            storageController!.reloadTableData()
+        }
+        if self.workersController != nil {
+            self.workersController!.setupTableView()
+        }
     }
 }
 
@@ -180,6 +186,19 @@ extension MainViewController: StorageControllerDelegate {
             itemVC.count = Int(rowData["quantity"] ?? "1")!
             print(rowData)
             self.navigationController?.pushViewController(itemVC, animated: true)
+        }
+    }
+}
+
+extension MainViewController: WorkerControllerDelegate {
+    func didPressedWorkerInfo(rowData: [String : String]) {
+        if rowData["identifier"] != self.userData["identifier"] {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let itemVC = storyboard.instantiateViewController(withIdentifier: "WorkerInfoController") as? WorkerInfoController {
+                itemVC.workerData = rowData
+                itemVC.selfLevel = self.userData["accessLevel"]!
+                self.navigationController?.pushViewController(itemVC, animated: true)
+            }
         }
     }
 }

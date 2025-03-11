@@ -23,16 +23,16 @@ class WorkerTableViewCell: UITableViewCell {
     func configure(with data: [String: String], selfId: String) {
         self.idLabel.text = data["identifier"]
         self.nameLabel.text = data["name"]
-        self.levelLabel.text = data["level"]
+        self.levelLabel.text = data["accessLevel"]
         self.selfId = selfId
         
         if selfId == data["identifier"]! {
-            if data["level"] == "5" {
+            if data["accessLevel"] == "5" {
                 imageEl.setImage(UIImage(systemName: "person.badge.key"), for: .normal)
             } else {
                 imageEl.setImage(UIImage(systemName: "person"), for: .normal)
             }
-        } else if data["level"] == "5" {
+        } else if data["accessLevel"] == "5" {
             imageEl.setImage(UIImage(systemName: "person.badge.key.fill"), for: .normal)
         } else {
             imageEl.setImage(UIImage(systemName: "person.fill"), for: .normal)
