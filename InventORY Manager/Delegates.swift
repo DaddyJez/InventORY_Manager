@@ -28,4 +28,5 @@ protocol LocationControllerDelegate: AnyObject {
 @MainActor
 protocol WorkerControllerDelegate: AnyObject {
     func didPressedWorkerInfo(rowData: [String: String])
+    func needsToUpdateList()
 }

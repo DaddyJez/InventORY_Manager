@@ -157,4 +157,8 @@ class Server {
         }
         return ([], false)
     }
+    
+    func updateUserInfo(oldId: String, newData: [String: String]) async -> Bool {
+        return await databaseManager.updateUser(oldID: oldId, newData: newData)
+    }
 }

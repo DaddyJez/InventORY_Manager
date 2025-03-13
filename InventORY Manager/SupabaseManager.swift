@@ -148,6 +148,26 @@ class SupabaseManager {
         }
     }
     
+    func updateUser(oldID: String, newData: [String: String]) async -> Bool {
+        do {
+            try await client.from("users")
+                .update([
+                    "identifier": newData["identifier"],
+                    "name": newData["name"]!,
+                    "login": newData["login"]!,
+                    "password": newData["password"]!,
+                    "level": newData["accessLevel"]!
+                ])
+                .eq("identifier", value: oldID)
+                .execute()
+            
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
+    
     //MARK: STORAGE OPERATIONS:
     func fetchStorageItems() async -> (dataExtracted: [StorageItem], res: Bool) {
         do {

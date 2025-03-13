@@ -197,8 +197,13 @@ extension MainViewController: WorkerControllerDelegate {
             if let itemVC = storyboard.instantiateViewController(withIdentifier: "WorkerInfoController") as? WorkerInfoController {
                 itemVC.workerData = rowData
                 itemVC.selfLevel = self.userData["accessLevel"]!
+                itemVC.delegate = self
                 self.navigationController?.pushViewController(itemVC, animated: true)
             }
         }
+    }
+    
+    func needsToUpdateList() {
+        self.workersController?.setupTableView()
     }
 }

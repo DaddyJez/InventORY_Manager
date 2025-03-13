@@ -33,7 +33,6 @@ class WorkersController: NSObject {
         
         setupTableView()
         
-        print("initialized")
     }
     
     func setupTableView() {
