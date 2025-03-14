@@ -60,6 +60,7 @@ class StorageController: NSObject {
     }
     
     func reloadTableData() {
+        resetFilters()
         Task {
             let answ = await server.getStorageData()
             if answ.res {

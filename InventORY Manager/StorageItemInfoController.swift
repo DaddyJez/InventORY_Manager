@@ -100,7 +100,6 @@ class StorageItemInfoController: UIViewController, UITableViewDelegate, UITableV
     
     
     private func setupTableView() async {
-        print("setup table view for \(itemData!["articul"]!)")
         tableView.delegate = self
         tableView.dataSource = self
                 
@@ -170,13 +169,14 @@ class StorageItemInfoController: UIViewController, UITableViewDelegate, UITableV
             }
             if quantToBuy == "" {
                 quantToBuy = "1"
-            } else if Int(quantToBuy)! > (self.count! - self.tableData.count) {
-                quantToBuy = String(self.count! - self.tableData.count)
             }
             Task {
                 do {
                     switch action {
                     case "locate":
+                        if Int(quantToBuy)! > (self.count! - self.tableData.count) {
+                            quantToBuy = String(self.count! - self.tableData.count)
+                        }
                         for _ in 0..<Int(quantToBuy)! {
                             print("locate \(self.itemData!["articul"]!) to \(self.selectedLocation!)")
                             if await Server.shared.locateItemInCab(art: self.itemData!["articul"]!, cab: self.selectedLocation!, userID: self.userData!["identifier"]!) {
@@ -185,8 +185,6 @@ class StorageItemInfoController: UIViewController, UITableViewDelegate, UITableV
                             }
                         }
                     case "buy":
-                        print("adding \(quantToBuy) items")
-                        
                         if await Server.shared.buyExistingItem(art: self.itemData!["articul"]!, quantity: quantToBuy) {
                             self.count! += Int(quantToBuy)!
                             self.itemData!["quantity"]! = String(self.count!)
@@ -317,7 +315,9 @@ class StorageItemInfoController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath)!
-        self.onCellTapped(cell: cell)
+        if Int(userData!["accessLevel"]!)! >= 2 {
+            self.onCellTapped(cell: cell)
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

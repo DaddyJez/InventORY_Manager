@@ -12,6 +12,7 @@ class WorkerInfoController: UIViewController {
     @IBOutlet weak var imageLabel: UIImageView!
     @IBOutlet weak var nameLabel: UITextView!
     
+    @IBOutlet weak var levelDescriptionLabel: UILabel!
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var levelStepperElement: UIStepper!
     @IBOutlet weak var passwordElement: UITextField!
@@ -74,12 +75,58 @@ class WorkerInfoController: UIViewController {
             loginElement.isEnabled = false
             
             idElement.isEnabled = false
+            
+            submitButton.isEnabled = false
+            submitButton.setTitle("Unabled", for: .normal)
+            
+            levelStepperElement.isEnabled = false
         }
         
         idElement.text = workerData["identifier"]
         levelElement.text = "\(workerData["accessLevel"]!)*"
         levelElement.isEnabled = false
         levelStepperElement.value = Double(workerData["accessLevel"]!)!
+    }
+    
+    private func setupDescriptionText() {
+        switch Int(levelStepperElement.value) {
+        case 1:
+            levelDescriptionLabel.text = """
+            1* is the level without any permissions.
+            
+            Users with this level can't provide any changes.
+            It's allowed to see info with this level.
+            """
+        case 2:
+            levelDescriptionLabel.text = """
+            2* level allows user to contact with storage units.
+            
+            Users with this level can report units as broken/working.
+            """
+        case 3:
+            levelDescriptionLabel.text = """
+            3* is the level that controlls all storage operations.
+            
+            Can add/remove all storage units.
+            Can see "Storage operations" journal.
+            """
+        case 4:
+            levelDescriptionLabel.text = """
+            4* is the level that controlls all operations with storage and cabinets.
+            
+            Add/remove storage units.
+            Add/remove cabinets and responsible people.
+            """
+        case 5:
+            levelDescriptionLabel.text = """
+            5* is the level whitch allows to controll everything.
+            
+            This level can controll all operations or give permissions to other.
+            (You can't change it once You set this level to someone)
+            """
+        default:
+            levelDescriptionLabel.text = "wtf is this level"
+        }
     }
     
     @IBAction func idElementEdited(_ sender: Any) {
@@ -112,6 +159,7 @@ class WorkerInfoController: UIViewController {
     @IBAction func levelChanged(_ sender: Any) {
         levelElement.text = "\(Int(levelStepperElement.value))*"
         workerData["accessLevel"] = String(Int(levelStepperElement.value))
+        setupDescriptionText()
     }
     
     @IBAction func submitButtonTapped(_ sender: Any) {

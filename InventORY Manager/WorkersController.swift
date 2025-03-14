@@ -36,12 +36,13 @@ class WorkersController: NSObject {
     }
     
     func setupTableView() {
+        resetFilters()
         Task {
             let answ = await Server.shared.fetchUsersInfo()
             if answ.res {
                 self.tableData = answ.users
                 self.initialTableData = answ.users
-                
+                                
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
