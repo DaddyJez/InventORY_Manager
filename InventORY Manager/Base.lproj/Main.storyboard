@@ -508,7 +508,7 @@
                                         <rect key="frame" x="0.0" y="38" width="393" height="573"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CabinetsTableCell" id="LYc-9K-LF3">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CabinetTableCell" id="LYc-9K-LF3" customClass="CabinetTableCell" customModule="InventORY_Manager" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LYc-9K-LF3" id="rQ3-Zb-HNh">
@@ -523,7 +523,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="666666 (Vdal)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fS-va-ryu">
-                                                            <rect key="frame" x="168" y="11" width="205" height="21"/>
+                                                            <rect key="frame" x="105" y="11" width="268" height="21"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
@@ -531,6 +531,10 @@
                                                         </label>
                                                     </subviews>
                                                 </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="cabinetNumLabel" destination="IlY-zT-FTu" id="jrR-Vy-lc4"/>
+                                                    <outlet property="responsibleLabel" destination="0fS-va-ryu" id="sCq-Qa-hFK"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
@@ -544,6 +548,9 @@
                                         <buttonConfiguration key="configuration" style="plain" image="plus" catalog="system">
                                             <color key="baseForegroundColor" systemColor="systemTealColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="addCabinetButtonTapped:" destination="Uvp-cY-VP9" eventType="touchUpInside" id="vGi-J0-QzC"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JYA-3s-rj4">
                                         <rect key="frame" x="133" y="619" width="127" height="29"/>
@@ -559,11 +566,17 @@
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3VR-ny-4UF">
                                         <rect key="frame" x="2" y="615" width="125" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="125" id="n4I-HC-gvL"/>
+                                        </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Computers">
                                             <imageReference key="image" image="arrow.uturn.backward.circle" catalog="system" symbolScale="small"/>
                                             <color key="baseForegroundColor" systemColor="systemRedColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="resetCabinetsFilterButtonTapped:" destination="Uvp-cY-VP9" eventType="touchUpInside" id="HYs-5k-Sqd"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fId-HZ-ad8">
                                         <rect key="frame" x="8" y="-3" width="86" height="35"/>
@@ -571,13 +584,19 @@
                                         <buttonConfiguration key="configuration" style="plain" title="Number">
                                             <color key="baseForegroundColor" systemColor="systemTealColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="filterCabinetsByNumber:" destination="Uvp-cY-VP9" eventType="touchUpInside" id="IZb-yE-j4n"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hSa-Oc-z6x">
-                                        <rect key="frame" x="168" y="-3" width="117" height="35"/>
+                                        <rect key="frame" x="93" y="-3" width="117" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Responsible">
                                             <color key="baseForegroundColor" systemColor="systemTealColor"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="filterCabinetsByResponsible:" destination="Uvp-cY-VP9" eventType="touchUpInside" id="FeW-S6-5OW"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -586,12 +605,12 @@
                                     <constraint firstItem="JYA-3s-rj4" firstAttribute="bottom" secondItem="VH2-8Y-6Mv" secondAttribute="bottomMargin" id="4We-Qt-KLF"/>
                                     <constraint firstItem="3VR-ny-4UF" firstAttribute="top" secondItem="ywc-xl-1Dq" secondAttribute="bottom" constant="4" id="5Nw-Kw-psN"/>
                                     <constraint firstItem="fId-HZ-ad8" firstAttribute="top" secondItem="VH2-8Y-6Mv" secondAttribute="top" constant="-3" id="Bq2-32-Znb"/>
-                                    <constraint firstItem="JYA-3s-rj4" firstAttribute="leading" secondItem="3VR-ny-4UF" secondAttribute="trailing" constant="6" id="Hxd-3h-3MB"/>
+                                    <constraint firstItem="JYA-3s-rj4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3VR-ny-4UF" secondAttribute="trailing" constant="6" id="PnF-PQ-6tq"/>
                                     <constraint firstItem="baR-iE-tlN" firstAttribute="top" secondItem="ywc-xl-1Dq" secondAttribute="bottom" constant="6" id="Wk0-d7-NAj"/>
                                     <constraint firstAttribute="trailing" secondItem="baR-iE-tlN" secondAttribute="trailing" constant="8" id="fsy-4S-3xN"/>
                                     <constraint firstAttribute="trailing" secondItem="ywc-xl-1Dq" secondAttribute="trailing" id="gRu-Up-XMx"/>
                                     <constraint firstItem="ywc-xl-1Dq" firstAttribute="leading" secondItem="VH2-8Y-6Mv" secondAttribute="leading" id="kYu-xT-IJw"/>
-                                    <constraint firstAttribute="trailing" secondItem="hSa-Oc-z6x" secondAttribute="trailing" constant="108" id="kZh-Ph-4zd"/>
+                                    <constraint firstAttribute="trailing" secondItem="hSa-Oc-z6x" secondAttribute="trailing" constant="183" id="kZh-Ph-4zd"/>
                                     <constraint firstItem="ywc-xl-1Dq" firstAttribute="top" secondItem="fId-HZ-ad8" secondAttribute="bottom" constant="6" id="nhv-rx-dgc"/>
                                     <constraint firstItem="JYA-3s-rj4" firstAttribute="top" secondItem="ywc-xl-1Dq" secondAttribute="bottom" constant="8" symbolic="YES" id="ozV-il-Nfm"/>
                                     <constraint firstItem="fId-HZ-ad8" firstAttribute="leading" secondItem="VH2-8Y-6Mv" secondAttribute="leading" constant="8" id="pzL-w3-GTh"/>
@@ -634,12 +653,16 @@
                     <connections>
                         <outlet property="accountInfoLabel" destination="6Ag-Ej-WTT" id="83a-zl-t2b"/>
                         <outlet property="accountView" destination="LlR-ll-NhT" id="nCe-lN-ZPA"/>
+                        <outlet property="addCabinetButton" destination="baR-iE-tlN" id="YZE-ve-Oxo"/>
                         <outlet property="addItemInStorageButton" destination="9uI-hK-fO0" id="Vge-uP-PK4"/>
                         <outlet property="addWorkerButton" destination="fc1-dp-bzh" id="Gha-3E-s9C"/>
+                        <outlet property="cabinetsTable" destination="ywc-xl-1Dq" id="kJO-OY-iAh"/>
                         <outlet property="cabinetsView" destination="VH2-8Y-6Mv" id="0rZ-JT-5pW"/>
                         <outlet property="greetingLabel" destination="WW7-ll-nVA" id="f1v-ad-Bsy"/>
                         <outlet property="mainView" destination="yCE-1h-deS" id="Tra-tA-Zms"/>
+                        <outlet property="pullDownCabinetsButton" destination="JYA-3s-rj4" id="gfz-EC-BzL"/>
                         <outlet property="pullDownStorageButton" destination="xMj-7u-tBI" id="3A5-XS-ecu"/>
+                        <outlet property="resetCabinetFiltersButton" destination="3VR-ny-4UF" id="mq9-tZ-20L"/>
                         <outlet property="resetStorageFiltersButton" destination="lNx-F9-liI" id="EOb-qH-8Zi"/>
                         <outlet property="resetWorkerFiltersButton" destination="9U9-Rl-nRT" id="taN-lR-AY3"/>
                         <outlet property="segmentedControl" destination="pWy-mg-SHH" id="lQj-1L-czT"/>
@@ -1220,10 +1243,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

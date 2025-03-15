@@ -66,7 +66,6 @@ class MainViewController: UIViewController {
     @IBOutlet weak var addWorkerButton: UIButton!
     @IBOutlet weak var resetWorkerFiltersButton: UIButton!
     @IBOutlet weak var workersTable: UITableView!
-    
     @IBAction func filterWorkersByID(_ sender: Any) {
         workersController!.applyFilter(criterion: "identifier")
     }
@@ -80,6 +79,25 @@ class MainViewController: UIViewController {
         workersController!.resetFilters()
     }
     
+    //MARK: CABINETS SETTINGS
+    var cabinetsController: CabinetsController?
+    @IBOutlet weak var cabinetsTable: UITableView!
+    @IBOutlet weak var resetCabinetFiltersButton: UIButton!
+    @IBOutlet weak var addCabinetButton: UIButton!
+    @IBOutlet weak var pullDownCabinetsButton: UIButton!
+    @IBAction func filterCabinetsByResponsible(_ sender: Any) {
+        cabinetsController!.filterByResponsible()
+    }
+    @IBAction func filterCabinetsByNumber(_ sender: Any) {
+        cabinetsController!.filterByNumber()
+    }
+    @IBAction func resetCabinetsFilterButtonTapped(_ sender: Any) {
+        cabinetsController!.resetFilters()
+    }
+    @IBAction func addCabinetButtonTapped(_ sender: Any) {
+        print("add cabinet")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,7 +109,9 @@ class MainViewController: UIViewController {
     
     private func showCabinetsWindow() {
         greetingLabel.text = "Cabinets"
-        print("showCabinetsWindow")
+        if self.cabinetsController == nil {
+            self.cabinetsController = CabinetsController(resetFiltersButton: self.resetCabinetFiltersButton, tableView: self.cabinetsTable, userData: self.userData, pullDownButton: self.pullDownCabinetsButton, addCabinetButton: self.addCabinetButton, delegate: self)
+        }
     }
     
     private func showStorageWindow() {
@@ -205,5 +225,11 @@ extension MainViewController: WorkerControllerDelegate {
     
     func needsToUpdateList() {
         self.workersController?.setupTableView()
+    }
+}
+
+extension MainViewController: CabinetsControllerDelegate {
+    func didTapOnCabinet(rowData: [String : String]) {
+        print(rowData)
     }
 }

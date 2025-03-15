@@ -60,3 +60,15 @@ struct LocationItem: Decodable {
 struct Cabinets: Decodable {
     let cabinetNum: Int
 }
+
+struct CabinetsInfo: Decodable {
+    let cabinetNum: Int
+    let responsible: String
+    let floor: Int
+    
+    let users: UserData?
+
+    struct UserData: Decodable {
+        let name: String
+    }
+}

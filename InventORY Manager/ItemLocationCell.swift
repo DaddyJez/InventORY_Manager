@@ -47,7 +47,6 @@ extension ItemLocationCell: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
             let relocateAction = UIAction(title: "Relocate", image: UIImage(systemName: "info.triangle")) { [weak self] _ in
-                print("delegate to be next")
                 guard let self = self else { return }
                 
                 self.locationDelegate?.didLocatedItem(rowData: item!)

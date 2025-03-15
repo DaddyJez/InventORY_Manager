@@ -76,9 +76,27 @@ class Server {
     }
     
     //MARK: STORAGE OPERATIONS
-    func getStorageData() async -> (dataExtracted: [StorageItem], res: Bool) {
+    func getStorageData() async -> (dataExtracted: [[String: String]], res: Bool) {
         let answ = await databaseManager.fetchStorageItems()
-        return answ
+        
+        if answ.res {
+            var storageData: [[String: String]] = []
+            for item in answ.dataExtracted {
+                storageData.append([
+                    "category": item.category,
+                    "articul": item.articul,
+                    "name": item.name,
+                    "quantity": String(item.quantity),
+                    "whoBought": item.whoBought,
+                    "buyerName": item.users?.name ?? "Unknown",
+                    "dateOfBuy": item.dateOfBuy,
+                    "fullyIdentified": String(item.fullyIdentified)
+                ])
+            }
+            return (storageData, true)
+        }
+            
+        return ([], false)
     }
     
     func addToStorage(caregory: String, name: String, cost: String, quantity: String) async -> (insertedArticul: String, res: Bool) {
@@ -160,5 +178,24 @@ class Server {
     
     func updateUserInfo(oldId: String, newData: [String: String]) async -> Bool {
         return await databaseManager.updateUser(oldID: oldId, newData: newData)
+    }
+    
+    func fetchCabinetsWithInfo() async -> (dataExtracted: [[String: String]], res: Bool) {
+        let answ = await databaseManager.fetchCabinetsWithInfo()
+        if answ.res {
+            var cabinets: [[String: String]] = []
+            for cabinet in answ.dataExtracted {
+                cabinets.append([
+                    "cabinetNum": String(cabinet.cabinetNum),
+                    "responsible": cabinet.responsible,
+                    "responsibleName": cabinet.users!.name,
+                    "floor": String(cabinet.floor)
+                ])
+            }
+            return (cabinets, true)
+        }
+        else {
+            return ([], false)
+        }
     }
 }

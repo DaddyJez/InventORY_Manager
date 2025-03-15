@@ -30,3 +30,8 @@ protocol WorkerControllerDelegate: AnyObject {
     func didPressedWorkerInfo(rowData: [String: String])
     func needsToUpdateList()
 }
+
+@MainActor
+protocol CabinetsControllerDelegate: AnyObject {
+    func didTapOnCabinet(rowData: [String: String])
+}

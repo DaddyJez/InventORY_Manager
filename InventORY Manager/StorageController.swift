@@ -14,7 +14,6 @@ class StorageController: NSObject {
     private var addItemButton: UIButton!
     private var tableView: UITableView!
     
-    private var storageData: [StorageItem]?
     private var tableData: [[String: String]] = []
     private var initialTableData: [[String: String]]
     
@@ -64,20 +63,7 @@ class StorageController: NSObject {
         Task {
             let answ = await server.getStorageData()
             if answ.res {
-                self.storageData = answ.dataExtracted
-                self.tableData = []
-                for item in self.storageData! {
-                    self.tableData.append([
-                        "category": item.category,
-                        "articul": item.articul,
-                        "name": item.name,
-                        "quantity": String(item.quantity),
-                        "whoBought": item.whoBought,
-                        "buyerName": item.users?.name ?? "Unknown",
-                        "dateOfBuy": item.dateOfBuy,
-                        "fullyIdentified": String(item.fullyIdentified)
-                    ])
-                }
+                self.tableData = answ.dataExtracted
                 self.initialTableData = self.tableData
                 
                 DispatchQueue.main.async {

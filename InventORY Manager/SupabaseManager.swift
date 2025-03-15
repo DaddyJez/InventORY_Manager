@@ -405,5 +405,22 @@ class SupabaseManager {
             return ([], false)
         }
     }
+    
+    
+    //MARK: CABINETS OPERATIONS
+    func fetchCabinetsWithInfo() async -> (dataExtracted: [CabinetsInfo], res: Bool) {
+        do {
+            let response: [CabinetsInfo] = try await client
+                .from("cabinets")
+                .select("cabinetNum, responsible, floor, users:users(name)")
+                .execute()
+                .value
+            
+            return (response, true)
+        } catch {
+            print(error)
+            return ([], false)
+        }
+    }
 }
 
