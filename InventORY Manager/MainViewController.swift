@@ -185,6 +185,10 @@ extension MainViewController: AccountControllerDelegate {
 }
 
 extension MainViewController: StorageControllerDelegate {
+    func didTapToSeeCabinets(cabinetNum: Int) {
+        <#code#>
+    }
+    
     func didPressedAddItem() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let storeVC = storyboard.instantiateViewController(withIdentifier: "AddItemViewController") as? AddItemViewController {
@@ -217,6 +221,7 @@ extension MainViewController: WorkerControllerDelegate {
             if let itemVC = storyboard.instantiateViewController(withIdentifier: "WorkerInfoController") as? WorkerInfoController {
                 itemVC.workerData = rowData
                 itemVC.selfLevel = self.userData["accessLevel"]!
+                itemVC.selfId = self.userData["identifier"]!
                 itemVC.delegate = self
                 self.navigationController?.pushViewController(itemVC, animated: true)
             }
@@ -229,7 +234,15 @@ extension MainViewController: WorkerControllerDelegate {
 }
 
 extension MainViewController: CabinetsControllerDelegate {
-    func didTapOnCabinet(rowData: [String : String]) {
-        print(rowData)
+    func didTapOnCabinet(rowData: [String : String]? = nil, cabinetNum: String? = nil) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let itemVC = storyboard.instantiateViewController(withIdentifier: "CabinetsInfoController") as? CabinetsInfoController {
+            itemVC.cabinetData = rowData
+            itemVC.cabinetNum = cabinetNum
+            itemVC.selfData = self.userData
+            itemVC.delegate = self
+            self.navigationController?.pushViewController(itemVC, animated: true)
+        }
     }
 }

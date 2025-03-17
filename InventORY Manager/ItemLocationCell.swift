@@ -52,8 +52,14 @@ extension ItemLocationCell: UIContextMenuInteractionDelegate {
                 self.locationDelegate?.didLocatedItem(rowData: item!)
                 self.delegate?.updateTable()
                 }
+            
+            let cabinetInfoAction = UIAction(title: "See Cabinet", image: UIImage(systemName: "info.triangle")) { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.delegate?.didTapToSeeCabinets(cabinetNum: item!.cabinet)
+                }
 
-            return UIMenu(title: "", children: [relocateAction])
+            return UIMenu(title: "", children: [relocateAction, cabinetInfoAction])
         }
     }
 }

@@ -23,6 +23,7 @@ class WorkerInfoController: UIViewController {
     var workerData: [String: String]!
     var oldWorkerData: [String: String]!
     var selfLevel: String!
+    var selfId: String!
     
     weak var delegate: WorkerControllerDelegate?
     
@@ -172,7 +173,7 @@ class WorkerInfoController: UIViewController {
         }
         print(oldWorkerData!)
         print(workerData!)
-        
+                
         if !isAllowedToChange.login || !isAllowedToChange.password || !isAllowedToChange.name || !isAllowedToChange.identifier {
             print("not allowed")
             submitButton.setTitle("NO", for: .normal)
@@ -180,6 +181,7 @@ class WorkerInfoController: UIViewController {
             submitButton.setTitle("YEP", for: .normal)
             Task {
                 if await Server.shared.updateUserInfo(oldId: oldWorkerData["identifier"]!, newData: workerData) {
+                    await Server.shared.parseUserChange(oldData: oldWorkerData!, newData: workerData!, adminId: selfId)
                     self.delegate?.needsToUpdateList()
                 }
             }

@@ -98,7 +98,7 @@ class CabinetsController: NSObject {
     private func handleActionSelection(item: String) {
         print("Выбрано: \(item)")
         
-        switch item {
+        switch item.last {
         case "1":
             resetFiltersButton.setTitle("\(item)st floor", for: .normal)
         case "2":
@@ -173,7 +173,7 @@ extension CabinetsController: UITableViewDataSource {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let rowData = tableData[indexPath.row]
                     
-        self.delegate.didTapOnCabinet(rowData: rowData)
+        self.delegate.didTapOnCabinet(rowData: rowData, cabinetNum: nil)
     }
 }
 

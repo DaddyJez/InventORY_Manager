@@ -198,4 +198,22 @@ class Server {
             return ([], false)
         }
     }
+    
+    func parseUserChange(oldData: [String: String], newData: [String: String], adminId: String) async {
+        var typeCondition = ""
+        var fromCondition = ""
+        var toCondition = ""
+        
+        for item in oldData {
+            if oldData["\(item.key)"] != newData["\(item.key)"] {
+                typeCondition += "\(item.key), ".capitalized
+                if item.key != "login" && item.key != "password" {
+                    fromCondition += "\(oldData["\(item.key)"]!), "
+                    toCondition += "\(newData["\(item.key)"]!), "
+                }
+            }
+        }
+        
+        await databaseManager.newUserChange(adminId: adminId, workerId: newData["identifier"]!, typeCond: typeCondition, fromCond: fromCondition, toCond: toCondition)
+    }
 }

@@ -124,6 +124,39 @@ class SupabaseManager {
         return false
     }
     
+    //MARK: WORKERS OPERATIONS
+    func fetchAllUsersData() async -> (data: [UserData], res: Bool) {
+        do {
+            let response: [UserData] = try await client
+                .from("users")
+                .select()
+                .execute()
+                .value
+            
+            return (response, true)
+        } catch {
+            print(error)
+            return ([], false)
+        }
+    }
+    
+    func newUserChange(adminId: String, workerId: String, typeCond: String, fromCond: String, toCond: String) async {
+        do {
+            try await client.from("usersChanges")
+                .insert([
+                    "adminId": adminId,
+                    "workerId": workerId,
+                    "type": typeCond,
+                    "from": fromCond,
+                    "to": toCond
+                ])
+                .execute()
+            
+        } catch {
+            print(error)
+        }
+    }
+    
     @MainActor func updateUserName(newName: String, oldData: [String: String]) async -> Bool {
         do {
             let response = try await client.from("users")
@@ -388,21 +421,6 @@ class SupabaseManager {
         } catch {
             print(error)
             return false
-        }
-    }
-    
-    func fetchAllUsersData() async -> (data: [UserData], res: Bool) {
-        do {
-            let response: [UserData] = try await client
-                .from("users")
-                .select()
-                .execute()
-                .value
-            
-            return (response, true)
-        } catch {
-            print(error)
-            return ([], false)
         }
     }
     

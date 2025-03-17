@@ -18,6 +18,7 @@ protocol StorageControllerDelegate: AnyObject {
     func didPressedAddItem()
     func didLocateItem(rowData: [String: String])
     func updateTable()
+    func didTapToSeeCabinets(cabinetNum: Int)
 }
 
 @MainActor
@@ -33,5 +34,5 @@ protocol WorkerControllerDelegate: AnyObject {
 
 @MainActor
 protocol CabinetsControllerDelegate: AnyObject {
-    func didTapOnCabinet(rowData: [String: String])
+    func didTapOnCabinet(rowData: [String: String]?, cabinetNum: String?)
 }
