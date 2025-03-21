@@ -340,7 +340,7 @@ class SupabaseManager {
         do {
             let response: [LocationItem] = try await client
                 .from("itemList")
-                .select("rowid, ItemArticul, cabinet, condition, storage:storage(name),cabinets:cabinets(responsible)")
+                .select("rowid, ItemArticul, cabinet, condition, storage:storage(name, category), cabinets:cabinets(responsible)")
                 .eq(col, value: value)
                 .execute()
                 .value
@@ -438,6 +438,22 @@ class SupabaseManager {
         } catch {
             print(error)
             return ([], false)
+        }
+    }
+    
+    func fetchExactCabinet(cabinetNum: Int) async -> (dataExtracted: [CabinetsInfo]?, res: Bool) {
+        do {
+            let response: [CabinetsInfo] = try await client
+                .from("cabinets")
+                .select("cabinetNum, responsible, floor, users:users(name)")
+                .eq("cabinetNum", value: cabinetNum)
+                .execute()
+                .value
+            
+            return (response, true)
+        } catch {
+            print(error)
+            return (nil, false)
         }
     }
 }

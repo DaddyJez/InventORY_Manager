@@ -48,6 +48,7 @@ struct LocationItem: Decodable {
         
     struct StorageItem: Decodable {
         let name: String
+        let category: String
     }
     
     let cabinets: Cabinets?

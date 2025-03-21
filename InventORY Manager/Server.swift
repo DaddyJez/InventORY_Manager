@@ -117,8 +117,7 @@ class Server {
     }
     
     func fetchStorageLocations(column: String = "ItemArticul", value: String) async -> (locations: [LocationItem], res: Bool) {
-        let answ = await databaseManager.fetchLocations(col: column, value: value)
-        return answ
+        return await databaseManager.fetchLocations(col: column, value: value)
     }
     
     func setConditionOnLocation(rowData: LocationItem, condition: Bool, userName: String) async -> Bool {
@@ -196,6 +195,21 @@ class Server {
         }
         else {
             return ([], false)
+        }
+    }
+    
+    func fetchExactCabinet(cabinetNum: Int) async -> (dataExtracted: [String: String]?, res: Bool) {
+        let answ = await databaseManager.fetchExactCabinet(cabinetNum: cabinetNum)
+        if answ.res {
+            let cabinetData: [String: String] = [
+                "cabinetNum": String(answ.dataExtracted!.first!.cabinetNum),
+                "responsible": answ.dataExtracted!.first!.responsible,
+                "responsibleName": answ.dataExtracted!.first!.users!.name,
+                "floor": String(answ.dataExtracted!.first!.floor)
+            ]
+            return (cabinetData, true)
+        } else {
+            return (nil, false)
         }
     }
     

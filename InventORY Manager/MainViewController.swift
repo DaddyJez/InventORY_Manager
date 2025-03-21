@@ -186,7 +186,7 @@ extension MainViewController: AccountControllerDelegate {
 
 extension MainViewController: StorageControllerDelegate {
     func didTapToSeeCabinets(cabinetNum: Int) {
-        <#code#>
+        self.didTapOnCabinet(cabinetNum: cabinetNum)
     }
     
     func didPressedAddItem() {
@@ -234,7 +234,7 @@ extension MainViewController: WorkerControllerDelegate {
 }
 
 extension MainViewController: CabinetsControllerDelegate {
-    func didTapOnCabinet(rowData: [String : String]? = nil, cabinetNum: String? = nil) {
+    func didTapOnCabinet(rowData: [String : String]? = nil, cabinetNum: Int? = nil) {
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let itemVC = storyboard.instantiateViewController(withIdentifier: "CabinetsInfoController") as? CabinetsInfoController {
@@ -242,6 +242,7 @@ extension MainViewController: CabinetsControllerDelegate {
             itemVC.cabinetNum = cabinetNum
             itemVC.selfData = self.userData
             itemVC.delegate = self
+            itemVC.userData = self.userData
             self.navigationController?.pushViewController(itemVC, animated: true)
         }
     }
