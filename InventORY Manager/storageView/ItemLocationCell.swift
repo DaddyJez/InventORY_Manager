@@ -25,6 +25,7 @@ class ItemLocationCell: UITableViewCell {
     
     func configure(with item: LocationItem, userLevel: Int) {
         self.item = item
+        self.userLevel = userLevel
         
         nameLabel.text = "(\(item.rowid)) \(item.storage!.name)"
         cabinetLabel.text = "\(item.cabinet)"
@@ -35,31 +36,33 @@ class ItemLocationCell: UITableViewCell {
             conditionLabel.text = "❌"
         }
         
-        if userLevel >= 3 {
-            DispatchQueue.main.async {
-                let interaction = UIContextMenuInteraction(delegate: self)
-                self.addInteraction(interaction)
-            }
-        }
+        let interaction = UIContextMenuInteraction(delegate: self)
+        self.addInteraction(interaction)
     }
 }
 extension ItemLocationCell: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let relocateAction = UIAction(title: "Relocate", image: UIImage(systemName: "info.triangle")) { [weak self] _ in
-                guard let self = self else { return }
-                
-                self.locationDelegate?.didLocatedItem(rowData: item!)
-                self.delegate?.updateTable()
-                }
             
             let cabinetInfoAction = UIAction(title: "See Cabinet", image: UIImage(systemName: "info.triangle")) { [weak self] _ in
                 guard let self = self else { return }
                 
                 self.delegate?.didTapToSeeCabinets(cabinetNum: item!.cabinet)
+            }
+            
+            if self.userLevel! >= 3 {
+                let relocateAction = UIAction(title: "Relocate", image: UIImage(systemName: "info.triangle")) { [weak self] _ in
+                    guard let self = self else { return }
+                    
+                    self.locationDelegate?.didLocatedItem(rowData: item!)
+                    self.delegate?.updateTable()
                 }
+                return UIMenu(title: "", children: [relocateAction, cabinetInfoAction])
+            } else {
+                return UIMenu(title: "", children: [cabinetInfoAction])
+            }
 
-            return UIMenu(title: "", children: [relocateAction, cabinetInfoAction])
+            
         }
     }
 }

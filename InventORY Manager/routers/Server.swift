@@ -175,6 +175,24 @@ class Server {
         return ([], false)
     }
     
+    func fetchUsersWithoutPassword() async -> (users: [[String: String]], res: Bool) {
+        let answ = await fetchUsersInfo()
+        if answ.res {
+            var users: [[String: String]] = []
+            for user in answ.users {
+                users.append([
+                    "identifier": user["identifier"]!,
+                    "name": user["name"]!,
+                    "accessLevel": user["accessLevel"]!
+                ])
+            }
+            return (users, true)
+        } else {
+            return ([], false)
+        }
+    }
+        
+    
     func updateUserInfo(oldId: String, newData: [String: String]) async -> Bool {
         return await databaseManager.updateUser(oldID: oldId, newData: newData)
     }
@@ -229,5 +247,19 @@ class Server {
         }
         
         await databaseManager.newUserChange(adminId: adminId, workerId: newData["identifier"]!, typeCond: typeCondition, fromCond: fromCondition, toCond: toCondition)
+    }
+    
+    func addNewCabinet(num: Int, floor: Int, resp: String) async -> Bool{
+        return await databaseManager.addNewCabinetToDB(cabinetNum: String(num), floor: String(floor), responsible: resp)
+    }
+    
+    @MainActor
+    func changeLoginPassw(login: String, passw: String) async -> Bool {
+        if await databaseManager.findSome(table: "users", column: "login", value: login) <= 1 {
+            let oldUserData = UserDefaultsManager.shared.loadUserData()
+            return await databaseManager.updateLoginPassword(newLogin: login, newPassword: passw, oldData: oldUserData)
+        } else {
+            return false
+        }
     }
 }

@@ -43,12 +43,14 @@ class CabinetsController: NSObject {
     private func loadConfig() {
         if self.userData["accessLevel"]! < "4" {
             self.addCabinetButton.isEnabled = false
+        } else {
+            self.addCabinetButton.isEnabled = true
         }
         
         reloadTableData()
     }
     
-    private func applyFilter(criterion: String) { // использовать для кнопок над таблицей
+    private func applyFilter(criterion: String) {
         let filteredData = self.tableData
         
         resetFiltersButton.isHidden = false
@@ -69,9 +71,7 @@ class CabinetsController: NSObject {
         }
         
         self.tableData = sortedData
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
     }
     
     private func configurePullDownButton() {
@@ -89,10 +89,8 @@ class CabinetsController: NSObject {
         
         let menu = UIMenu(title: "Chose category", children: actions)
         
-        DispatchQueue.main.async {
-            self.pullDownButton.menu = menu
-            self.pullDownButton.showsMenuAsPrimaryAction = true
-        }
+        self.pullDownButton.menu = menu
+        self.pullDownButton.showsMenuAsPrimaryAction = true
     }
     
     private func handleActionSelection(item: String) {
@@ -144,6 +142,13 @@ class CabinetsController: NSObject {
     
     func filterByResponsible() {
         applyFilter(criterion: "responsibleName")
+    }
+    
+    @MainActor
+    func addNewCabinet() {
+        let cabinetNums = Set(self.tableData.compactMap {$0["cabinetNum"]}).sorted()
+                
+        self.delegate?.didTapAddCabinet(cabinetNums: cabinetNums)
     }
 }
 

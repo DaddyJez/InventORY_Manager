@@ -181,6 +181,32 @@ class SupabaseManager {
         }
     }
     
+    @MainActor
+    func updateLoginPassword(newLogin: String, newPassword: String, oldData: [String: String]) async -> Bool {
+        do {
+            try await client.from("users")
+                .update([
+                    "login": newLogin,
+                    "password": newPassword
+                ])
+                .eq("identifier", value: oldData["identifier"]!)
+                .execute()
+            
+            UserDefaultsManager.shared.saveUserData(
+                identifier: oldData["identifier"]!,
+                login: newLogin,
+                password: newPassword,
+                name: oldData["name"]!,
+                accessLevel: Int8(oldData["accessLevel"]!)!
+            )
+            
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
+    
     func updateUser(oldID: String, newData: [String: String]) async -> Bool {
         do {
             try await client.from("users")
@@ -320,7 +346,7 @@ class SupabaseManager {
     func newStorageChange(type: String = "BUY", art: String, quant: String = "1", price: String = "0", personalName: String) async {
         print("\(type) \(art) \(quant) \(price) \(personalName)")
         do {
-            _ = try await client
+            try await client
                 .from("storageChanges")
                 .insert([
                     "type": type,
@@ -353,12 +379,11 @@ class SupabaseManager {
     
     func setConditionOnLocation(rowData: LocationItem, condition: Bool, userName: String) async -> Bool {
         do {
-            _ = try await client.from("itemList")
+            try await client.from("itemList")
                 .update(["condition": condition])
                 .eq("rowid", value: rowData.rowid)
                 .execute()
             await newStorageChange(type: "UPDATE \(!rowData.condition ? "TRUE" : "FALSE")", art: rowData.ItemArticul, personalName: userName)
-            print("success")
             return true
         } catch {
             print(error)
@@ -454,6 +479,37 @@ class SupabaseManager {
         } catch {
             print(error)
             return (nil, false)
+        }
+    }
+    
+    func addNewCabinetToDB(cabinetNum: String, floor: String, responsible: String) async -> Bool {
+        do {
+            try await client
+                .from("cabinets")
+                .insert(["cabinetNum": cabinetNum, "floor": floor, "responsible": responsible])
+                .execute()
+            
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
+    
+    func findSome(table: String, column: String, value: String) async -> Int {
+        do {
+            let response: [[String: String]] = try await client
+                .from(table)
+                .select(column)
+                .eq(column, value: value)
+                .execute()
+                .value
+            
+            print("RESPONSE:")
+            return response.count
+        } catch {
+            print(error)
+            return 404
         }
     }
 }

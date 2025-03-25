@@ -14,11 +14,23 @@ class AccountController {
     private var controller: UIViewController
     private var delegate: AccountControllerDelegate?
     
-    init(userData: [String: String], infoLabel: UILabel, controller: UIViewController, delegate: AccountControllerDelegate) {
+    private var passwTextElement: UITextField!
+    private var loginTextElement: UITextField!
+    
+    private var proceedButton: UIButton!
+    
+    private var isChanging: Bool = false
+    
+    init(userData: [String: String], infoLabel: UILabel, controller: UIViewController, delegate: AccountControllerDelegate, passwTextElement: UITextField, loginTextElement: UITextField, proceedButton: UIButton) {
         self.userData = userData
         self.infoLabel = infoLabel
         self.controller = controller
         self.delegate = delegate
+        
+        self.passwTextElement = passwTextElement
+        self.loginTextElement = loginTextElement
+        
+        self.proceedButton = proceedButton
         
         setupUI()
     }
@@ -99,5 +111,69 @@ class AccountController {
         Identifier: \(String(describing: self.userData["identifier"]!))
         Access level: \(String(describing: self.userData["accessLevel"]!))
         """
+        
+        passwTextElement.text = "********"
+        loginTextElement.text = "********"
+        
+        passwTextElement.isEnabled = false
+        loginTextElement.isEnabled = false
+        
+        proceedButton.setTitle("Change", for: .normal)
+    }
+    
+    func proceedChangingLoginPassword() {
+        if !isChanging {
+            passwTextElement.text = self.userData["password"]
+            loginTextElement.text = self.userData["login"]
+            
+            passwTextElement.isEnabled = true
+            loginTextElement.isEnabled = true
+            
+            proceedButton.setTitle("Done", for: .normal)
+            
+            isChanging = !isChanging
+        } else {
+            if passwTextElement.text!.count > 5 && loginTextElement.text!.count > 5 {
+                passwTextElement.isEnabled = false
+                loginTextElement.isEnabled = false
+                
+                proceedButton.setTitle("Change", for: .normal)
+                proceedButton.setTitleColor(.systemGreen, for: .normal)
+                
+                if passwTextElement.text! == self.userData["password"] && loginTextElement.text! == self.userData["login"] {
+                    proceedButton.setTitleColor(.systemTeal, for: .normal)
+                    
+                    self.passwTextElement.text = "********"
+                    self.loginTextElement.text = "********"
+                } else {
+                    Task {
+                        if await Server.shared.changeLoginPassw(login: loginTextElement.text!, passw: passwTextElement.text!) {
+                            DispatchQueue.main.async {
+                                self.userData["password"] = self.passwTextElement.text!
+                                self.userData["login"] = self.loginTextElement.text!
+                                
+                                self.passwTextElement.text = "********"
+                                self.loginTextElement.text = "********"
+                                
+                                self.proceedButton.setTitleColor(.systemTeal, for: .normal)
+                            }
+                        }
+                        else {
+                            DispatchQueue.main.async {
+                                self.proceedButton.setTitle("Retry", for: .normal)
+                                self.proceedButton.setTitleColor(.systemRed, for: .normal)
+                            }
+                        }
+                    }
+                }
+
+                isChanging = !isChanging
+            } else {
+                proceedButton.setTitle("Retry", for: .normal)
+                proceedButton.setTitleColor(.systemRed, for: .normal)
+            }
+            
+        }
+        
     }
 }

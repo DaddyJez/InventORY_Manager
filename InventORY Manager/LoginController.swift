@@ -51,15 +51,16 @@ class LoginController: UIViewController {
             if registerOrLogin.selectedSegmentIndex == 0 {
                 if await (server.tryToLog()){
                     ifRegistered()
-                    
                 } else {
                     labelGreeting.text = "Wrong login or password"
+                    goButton.isHidden = false
                 }
             } else if await (server.register()) {
                 labelGreeting.text = "Registered, \(loginEl.text!)!"
                 await autoLogin()
             } else {
                 labelGreeting.text = "Try another login or password"
+                goButton.isHidden = false
             }
             goButton.isEnabled = true
         }
@@ -73,10 +74,7 @@ class LoginController: UIViewController {
     }
 
     private func autoLogin() async {
-        let server = Server(login: loginEl.text!, password: passwEl.text!)
-        if await (server.tryToLog()){
-            ifRegistered()
-        }
+        goButtonPressed(self)
     }
 }
 

@@ -28,6 +28,10 @@ class MainViewController: UIViewController {
     }
     
     
+    //MARK: MAIN VIEW SETTINGS
+    var mainController: MainWindowController?
+    @IBOutlet weak var mainViewJournalsDropdown: UIButton!
+    
     //MARK: STORAGE SETTINGS
     var storageController: StorageController?
     @IBOutlet weak var resetStorageFiltersButton: UIButton!
@@ -54,6 +58,12 @@ class MainViewController: UIViewController {
     //MARK: ACCOUNT SETTINGS
     var accountController: AccountController!
     @IBOutlet weak var accountInfoLabel: UILabel!
+    @IBOutlet weak var accountLoginTextField: UITextField!
+    @IBOutlet weak var accountPasswordLoginChangeButton: UIButton!
+    @IBOutlet weak var accountPasswTextField: UITextField!
+    @IBAction func proceedChangePassw(_ sender: Any) {
+        accountController.proceedChangingLoginPassword()
+    }
     @IBAction func onLogOutPressed(_ sender: Any) {
         accountController.proceedLogout()
     }
@@ -95,7 +105,7 @@ class MainViewController: UIViewController {
         cabinetsController!.resetFilters()
     }
     @IBAction func addCabinetButtonTapped(_ sender: Any) {
-        print("add cabinet")
+        cabinetsController!.addNewCabinet()
     }
     
     override func viewDidLoad() {
@@ -123,7 +133,9 @@ class MainViewController: UIViewController {
         
     private func showMainWindow() {
         greetingLabel.text = "Hello, \(userData["name"]!)!"
-        print("showMainWindow")
+        if self.mainController == nil {
+            self.mainController = MainWindowController(dropdownWithJournals: self.mainViewJournalsDropdown)
+        }
     }
     
     private func showWorkerWindow() {
@@ -136,7 +148,7 @@ class MainViewController: UIViewController {
     private func showAccountSettingsWindow() {
         greetingLabel.text = "Account settings"
         if self.accountController == nil {
-            self.accountController = AccountController(userData: self.userData, infoLabel: self.accountInfoLabel, controller: self, delegate: self)
+            self.accountController = AccountController(userData: self.userData, infoLabel: self.accountInfoLabel, controller: self, delegate: self, passwTextElement: self.accountPasswTextField, loginTextElement: self.accountLoginTextField, proceedButton: self.accountPasswordLoginChangeButton)
         }
     }
     
@@ -234,8 +246,22 @@ extension MainViewController: WorkerControllerDelegate {
 }
 
 extension MainViewController: CabinetsControllerDelegate {
+    func needsToUpdateCabinets() {
+        self.cabinetsController?.reloadTableData()
+    }
+    
+    func didTapAddCabinet(cabinetNums: [String]) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let itemVC = storyboard.instantiateViewController(withIdentifier: "AddCabinetViewController") as? AddCabinetViewController {
+
+            itemVC.cabinets = cabinetNums
+            itemVC.delegate = self
+            
+            self.navigationController?.pushViewController(itemVC, animated: true)
+        }
+    }
+    
     func didTapOnCabinet(rowData: [String : String]? = nil, cabinetNum: Int? = nil) {
-        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         if let itemVC = storyboard.instantiateViewController(withIdentifier: "CabinetsInfoController") as? CabinetsInfoController {
             itemVC.cabinetData = rowData
