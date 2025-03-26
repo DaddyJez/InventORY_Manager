@@ -10,10 +10,11 @@ import UIKit
 
 class MainWindowController {
     private var dropdownWithJournals: UIButton
+    private var delegate: MainWindowControllerDelegate?
     
     /*
      TODO: adding:
-     delegate
+     delegate (done)
      tableview
      prototype cell
      
@@ -21,10 +22,11 @@ class MainWindowController {
      setup(er)
      */
     
-    init(dropdownWithJournals: UIButton) {
+    init(dropdownWithJournals: UIButton, delegate: MainWindowControllerDelegate?) {
         self.dropdownWithJournals = dropdownWithJournals
         
         self.configureDropDown()
+        self.delegate = delegate
     }
     
     private func configureDropDown() {
@@ -46,7 +48,12 @@ class MainWindowController {
         self.dropdownWithJournals.showsMenuAsPrimaryAction = true
     }
     
-    private func handleActionSelection(item: String) {
-        print(item)
+    @MainActor
+    private func handleActionSelection(item: String) {        
+        if item == "Storage" {
+            self.delegate?.didTapOnStorageJournal()
+        } else if item == "Workers" {
+            self.delegate?.didTapOnWorkersJournal()
+        }
     }
 }

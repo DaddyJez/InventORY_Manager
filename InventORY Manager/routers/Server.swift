@@ -262,4 +262,19 @@ class Server {
             return false
         }
     }
+    
+    func fetchStorageJournal() async -> [StorageJournalModel] {
+        let journal = await databaseManager.fetchStorageJournal()
+        
+        if !journal.isEmpty {
+            let sortedData = journal.sorted {
+                guard let firstValue = $0.rowid, let secondValue = $1.rowid else { return false }
+                return firstValue > secondValue
+            }
+            
+            return sortedData
+        } else {
+            return journal
+        }
+    }
 }

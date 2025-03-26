@@ -134,7 +134,7 @@ class MainViewController: UIViewController {
     private func showMainWindow() {
         greetingLabel.text = "Hello, \(userData["name"]!)!"
         if self.mainController == nil {
-            self.mainController = MainWindowController(dropdownWithJournals: self.mainViewJournalsDropdown)
+            self.mainController = MainWindowController(dropdownWithJournals: self.mainViewJournalsDropdown, delegate: self)            
         }
     }
     
@@ -272,4 +272,21 @@ extension MainViewController: CabinetsControllerDelegate {
             self.navigationController?.pushViewController(itemVC, animated: true)
         }
     }
+}
+
+extension MainViewController: MainWindowControllerDelegate {
+    func didTapOnStorageJournal() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let itemVC = storyboard.instantiateViewController(withIdentifier: "StorageJournalViewController") as? StorageJournalViewController {
+            self.navigationController?.pushViewController(itemVC, animated: true)
+        }
+    }
+    
+    func didTapOnWorkersJournal() {
+        print("workers")
+        
+        // TODO: ^
+    }
+    
+    
 }

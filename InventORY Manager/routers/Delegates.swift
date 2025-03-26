@@ -38,3 +38,9 @@ protocol CabinetsControllerDelegate: AnyObject {
     func didTapAddCabinet(cabinetNums: [String])
     func needsToUpdateCabinets()
 }
+
+@MainActor
+protocol MainWindowControllerDelegate: AnyObject {
+    func didTapOnStorageJournal()
+    func didTapOnWorkersJournal()
+}

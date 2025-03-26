@@ -73,3 +73,26 @@ struct CabinetsInfo: Decodable {
         let name: String
     }
 }
+
+struct StorageJournalModel: Decodable {
+    let rowid: Int?
+    let type: String
+    let itemArticul: String
+    
+    let storage: StorageItem?
+    
+    let quantity: Int
+    let cost: Int
+    let created_at: String
+    let personalName: String
+    
+    let users: UserData?
+    
+    struct UserData: Decodable {
+        let name: String
+    }
+    
+    struct StorageItem: Decodable {
+        let name: String
+    }
+}

@@ -512,5 +512,21 @@ class SupabaseManager {
             return 404
         }
     }
+    
+    //MARK: JOURNALS
+    func fetchStorageJournal() async -> [StorageJournalModel] {
+        do {
+            let response: [StorageJournalModel] = try await client
+                .from("storageChanges")
+                .select("rowid, type, itemArticul, storage:storage(name), quantity, cost, created_at, personalName, users:users(name)")
+                .execute()
+                .value
+            
+            return response
+        } catch {
+            print(error)
+            return []
+        }
+    }
 }
 
